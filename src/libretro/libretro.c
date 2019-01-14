@@ -245,7 +245,7 @@ static void update_input(void)
 		joy_pressed[c++] = JS(i, L);
 		joy_pressed[c++] = JS(i, R);
 
-		key[KEY_TAB] |= JS(i, R2);
+		key[KEY_TAB] |= (JS(i, L2) && JS(i, R2));
 	}
 
 	key[KEY_A] =RK(0, a);
