@@ -754,6 +754,8 @@ bool retro_load_game(const struct retro_game_info *info)
    /* skip disclaimer - skips 'nag screen' */
    options.skip_disclaimer = skip_disclaimer;
 
+   options.cheat = 1;
+
    /* Replace M68000 by CYCLONE */
 #if (HAS_CYCLONE)
    int use_cyclone = 1;
