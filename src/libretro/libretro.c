@@ -818,7 +818,15 @@ bool retro_load_game(const struct retro_game_info *info)
 	   use_mouse=0;
    }
 
-   decompose_rom_sample_path(IMAMEBASEPATH, IMAMESAMPLEPATH);
+   const char *sysdir;
+   char samplepath[1024] = "";
+
+   environ_cb(RETRO_ENVIRONMENT_GET_SYSTEM_DIRECTORY, &sysdir);
+
+   strcpy(samplepath, sysdir);
+   strcat(samplepath, "/samples");
+
+   decompose_rom_sample_path(IMAMEBASEPATH, samplepath);
 
    mame_sleep = 1;
 
