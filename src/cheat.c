@@ -113,6 +113,7 @@ extern struct GameDriver driver_neogeo;
 #endif
 
 extern unsigned char *memory_find_base (int cpu, int offset);
+extern int global_retrox_simple;
 
 /******************************************
  *
@@ -2654,6 +2655,10 @@ INT32 cheat_menu(struct osd_bitmap *bitmap, INT32 selected)
 	INT32 sel;
 	UINT8 total = 0;
 	static INT8 submenu_choice;
+
+	if (global_retrox_simple) {
+		return EnableDisableCheatMenu (bitmap, selected);
+	}
 
 	sel = selected - 1;
 

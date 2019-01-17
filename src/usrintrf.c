@@ -58,6 +58,7 @@ static int trueorientation;
 static int orientation_count;
 
 extern int global_showinfo;
+extern int global_retrox_simple;
 
 static void switch_ui_orientation(void)
 {
@@ -2814,9 +2815,12 @@ static void setup_menu_init(void)
 	}
 
 #ifndef MESS
-	menu_item[menu_total] = ui_getstring (UI_bookkeeping); menu_action[menu_total++] = UI_STATS;
+	if (!global_retrox_simple) {
+		menu_item[menu_total] = ui_getstring (UI_bookkeeping); menu_action[menu_total++] = UI_STATS;
+		menu_item[menu_total] = ui_getstring (UI_history); menu_action[menu_total++] = UI_HISTORY;
+	}
 	menu_item[menu_total] = ui_getstring (UI_gameinfo); menu_action[menu_total++] = UI_GAMEINFO;
-	menu_item[menu_total] = ui_getstring (UI_history); menu_action[menu_total++] = UI_HISTORY;
+
 #else
 	menu_item[menu_total] = ui_getstring (UI_imageinfo); menu_action[menu_total++] = UI_IMAGEINFO;
 	menu_item[menu_total] = ui_getstring (UI_filemanager); menu_action[menu_total++] = UI_FILEMANAGER;
@@ -2841,7 +2845,9 @@ static void setup_menu_init(void)
 #endif
 
 #ifdef ENABLE_AUTOFIRE
-	menu_item[menu_total] = "Auto-Fire"; menu_action[menu_total++] = UI_AUTOFIRE;
+	if (!global_retrox_simple) {
+		menu_item[menu_total] = "Auto-Fire"; menu_action[menu_total++] = UI_AUTOFIRE;
+	}
 #endif
 	menu_item[menu_total] = ui_getstring (UI_resetgame); menu_action[menu_total++] = UI_RESET;
 	menu_item[menu_total] = ui_getstring (UI_returntogame); menu_action[menu_total++] = UI_EXIT;

@@ -84,6 +84,7 @@ void CLIB_DECL logerror(const char *text,...)
 }
 
 int global_showinfo = 1;
+int global_retrox_simple = 1;
 int emulated_width;
 int emulated_height;
 int safe_render_path = 1;
@@ -172,6 +173,20 @@ static void update_variables(void)
     }
     else
         global_showinfo = 0;
+
+    var.value = NULL;
+    var.key = "mame2000-retrox_simple";
+
+    if (environ_cb(RETRO_ENVIRONMENT_GET_VARIABLE, &var) && var.value)
+    {
+        if(strcmp(var.value, "enabled") == 0)
+            global_retrox_simple = 1;
+        else
+            global_retrox_simple = 0;
+    }
+    else
+        global_retrox_simple = 1;
+
 }
 
 void retro_set_environment(retro_environment_t cb)
@@ -179,6 +194,7 @@ void retro_set_environment(retro_environment_t cb)
    static const struct retro_variable vars[] = {
       { "mame2000-skip_disclaimer", "Skip Disclaimer; enabled|disabled" },
       { "mame2000-show_gameinfo", "Show Game Information; disabled|enabled" },
+      { "mame2000-retrox_simple", "Use simple settings; enabled|disabled" },
       { NULL, NULL },
    };
    environ_cb = cb;
