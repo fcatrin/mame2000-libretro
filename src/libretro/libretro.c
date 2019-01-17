@@ -563,13 +563,32 @@ void retro_get_system_av_info(struct retro_system_av_info *info)
 #ifndef WANT_LIBCO
    lock_mame();
 #endif
+   int bmWidth  = Machine->drv->screen_width;
+   int bmHeight = Machine->drv->screen_height;
+   if (!(Machine->drv->video_attributes & VIDEO_TYPE_VECTOR)) {
+      bmWidth = Machine->drv->default_visible_area.max_x - Machine->drv->default_visible_area.min_x + 1;
+      bmHeight = Machine->drv->default_visible_area.max_y - Machine->drv->default_visible_area.min_y + 1;
+   }
+
+   bool rotated = Machine->orientation == ROT90 || Machine->orientation == ROT270;
+   if (rotated) {
+      int tmp = bmWidth;
+      bmWidth = bmHeight;
+      bmHeight = tmp;
+   }
+
+   logerror("video av_info %dx%d aspect %f rotated %s", bmWidth, bmHeight,
+      (Machine->drv->video_attributes & VIDEO_PIXEL_ASPECT_RATIO_MASK) == VIDEO_PIXEL_ASPECT_RATIO_1_2 ? 0.5f : 1.0f,
+			  rotated?"true":"false");
+
    struct retro_game_geometry g = {
-      Machine->drv->screen_width,
-      Machine->drv->screen_height,
-      Machine->drv->screen_width,
-      Machine->drv->screen_height,
-      ((float) Machine->drv->screen_width / Machine->drv->screen_height) * ((Machine->drv->video_attributes & VIDEO_PIXEL_ASPECT_RATIO_MASK) == VIDEO_PIXEL_ASPECT_RATIO_1_2 ? 0.5f : 1.0f)
+      bmWidth,
+      bmHeight,
+      bmWidth,
+      bmHeight,
+      ((float) bmWidth / bmHeight) * ((Machine->drv->video_attributes & VIDEO_PIXEL_ASPECT_RATIO_MASK) == VIDEO_PIXEL_ASPECT_RATIO_1_2 ? 0.5f : 1.0f)
    };
+
    struct retro_system_timing t = {
       Machine->drv->frames_per_second,
       32000.0
